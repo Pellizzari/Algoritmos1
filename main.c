@@ -31,7 +31,10 @@ void enqueue(struct queue* q, int value){
         if(q->front == -1)
             q->front = 0;
         q->rear++;
+
         q->items[q->rear] = value;
+
+
     }
 }
 
@@ -45,8 +48,9 @@ int dequeue(struct queue* q){
         item = q->items[q->front];
         q->front++;
         if(q->front > q->rear){
-            printf("Resetting queue");
+            //printf("Resetting queue\n");
             q->front = q->rear = -1;
+
         }
     }
     return item;
@@ -129,40 +133,41 @@ void printGraph(struct Graph* graph){
 
 //sort of bfs-------------------------------------------------
 
-void bfs(struct Graph* graph, int startVertex) {
-    struct queue* q = createQueue();
-    graph->visited[startVertex] = 1;
+void bfs(struct Graph* graph, int startVertex,int *fobiasusuarios) {
+    printf("pene" );
+    struct queue* q=createQueue();
     enqueue(q, startVertex);
+    graph->visited[startVertex] = 1;
+    int fobiaganadora=fobiasusuarios[startVertex];
+    int maxfobia=1;
+    int *fobias=(int *) malloc(10000*sizeof(int));
+    for(int i=0;i<10000;i++){
+      fobias[i]=0;
+    }
+    fobias[fobiasusuarios[startVertex]]+=1;
 
     while(!isEmpty(q)){
-        printQueue(q);
         int currentVertex = dequeue(q);
-        printf("Visited %d\n", currentVertex);
-
-       struct node* temp = graph->adjLists[currentVertex];
-
-       while(temp) {
+        struct node* temp = graph->adjLists[currentVertex];
+        while(temp) {
             int adjVertex = temp->vertex;
-            printf("%d\n",adjVertex);
-
             if(graph->visited[adjVertex] == 0){
                 graph->visited[adjVertex] = 1;
                 enqueue(q, adjVertex);
-                printf("%d\n",adjVertex);
+                fobias[fobiasusuarios[adjVertex]]+=1;
+                if(fobias[fobiasusuarios[adjVertex]]>maxfobia){
+                  fobiaganadora=fobiasusuarios[adjVertex];
+                  maxfobia=fobias[fobiasusuarios[adjVertex]];
+                }
             }
-            //AQUI HAY SEG FAULT!!!!!!!!!!!!!!!!!!!!!!!
             temp = temp->next;
        }
     }
+    printf("%d\n",fobiaganadora );
 }
 
 //-------------------------------------
 
-
-
-
-
-// Driver program to test above functions
 int main()
 {
 	int N, M;
@@ -175,11 +180,15 @@ int main()
   //usuarios posee la fobia de cada usuario
 	int usuarios[N];
 	while(i<N){
-		//printf("Ingrese fobia del usuario %d:\n",i+1);
 		scanf("\n %d[^\n]",&entrada1);
 		usuarios[i] = entrada1;
 		i++;
 	}
+
+  /*for(int i=0;i<N;i++){
+    printf("%d\n",i );
+    printf("%d\n\n",usuarios[i]);
+  }*/
 
 	i = 0 ;
 
@@ -188,13 +197,20 @@ int main()
 
 	struct Graph* graph = createGraph(N);
 	while(i<M){
-		//printf("Ingrese relacion %d:\n",i+1);
-		scanf("\n%d %d[^\n]", &entrada1, &entrada2);
-		addEdge(graph, entrada1, entrada2);
+
+		scanf("%d %d", &entrada1, &entrada2);
+		addEdge(graph, entrada1-1, entrada2-1);
 		i++;
+
 	}
-	printGraph(graph);
-  bfs(graph,1);
+
+  //printGraph(graph);
+
+  for(int i=0;i<N;i++){
+    if(graph->visited[i] == 0){
+      bfs(graph,i,usuarios);
+    }
+  }
 
     return 0;
 }
