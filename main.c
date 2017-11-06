@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define SIZE 2000000
+#define SIZE 20000000
 
 //Implementacion de cola-------------------------------
 struct queue {
