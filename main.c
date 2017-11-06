@@ -133,8 +133,7 @@ void printGraph(struct Graph* graph){
 
 //sort of bfs-------------------------------------------------
 
-void bfs(struct Graph* graph, int startVertex,int *fobiasusuarios) {
-    printf("pene" );
+int bfs(struct Graph* graph, int startVertex,int *fobiasusuarios) {
     struct queue* q=createQueue();
     enqueue(q, startVertex);
     graph->visited[startVertex] = 1;
@@ -163,7 +162,7 @@ void bfs(struct Graph* graph, int startVertex,int *fobiasusuarios) {
             temp = temp->next;
        }
     }
-    printf("%d\n",fobiaganadora );
+    return fobiaganadora;
 }
 
 //-------------------------------------
@@ -205,11 +204,19 @@ int main()
 	}
 
   //printGraph(graph);
+  int grupos=0;
+  struct queue* queueA=createQueue();
 
   for(int i=0;i<N;i++){
+
     if(graph->visited[i] == 0){
-      bfs(graph,i,usuarios);
+      grupos++;
+      enqueue(queueA, bfs(graph,i,usuarios));
     }
+  }
+  printf("%d\n",grupos);
+  while (!isEmpty(queueA)) {
+    printf("%d\n",dequeue(queueA));
   }
 
     return 0;
